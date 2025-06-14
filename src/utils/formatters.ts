@@ -1,12 +1,26 @@
 import * as prettier from 'prettier';
-import parserBabel from 'prettier/parser-babel';
-import parserTypeScript from 'prettier/parser-typescript';
-import parserHtml from 'prettier/parser-html';
-import parserPostcss from 'prettier/parser-postcss';
-import parserYaml from 'prettier/parser-yaml';
-import parserMarkdown from 'prettier/parser-markdown';
-import { js_beautify, css_beautify, html_beautify } from 'js-beautify';
 import { Language, FormatterSettings } from '../types';
+import { js_beautify, html_beautify } from 'js-beautify';
+
+// Import parsers dynamically to avoid bundling issues
+async function getParser(parserName: string) {
+  switch (parserName) {
+    case 'babel':
+      return (await import('prettier/parser-babel')).default;
+    case 'typescript':
+      return (await import('prettier/parser-typescript')).default;
+    case 'html':
+      return (await import('prettier/parser-html')).default;
+    case 'css':
+      return (await import('prettier/parser-postcss')).default;
+    case 'yaml':
+      return (await import('prettier/parser-yaml')).default;
+    case 'markdown':
+      return (await import('prettier/parser-markdown')).default;
+    default:
+      throw new Error(`Unknown parser: ${parserName}`);
+  }
+}
 
 export async function formatCode(
   code: string,
@@ -20,7 +34,7 @@ export async function formatCode(
       case 'javascript':
         return await prettier.format(code, {
           parser: 'babel',
-          plugins: [parserBabel],
+          plugins: [await getParser('babel')],
           tabWidth: settings.tabWidth,
           useTabs: settings.useTabs,
           semi: settings.semicolons,
@@ -32,7 +46,7 @@ export async function formatCode(
       case 'typescript':
         return await prettier.format(code, {
           parser: 'typescript',
-          plugins: [parserTypeScript],
+          plugins: [await getParser('typescript')],
           tabWidth: settings.tabWidth,
           useTabs: settings.useTabs,
           semi: settings.semicolons,
@@ -44,7 +58,7 @@ export async function formatCode(
       case 'html':
         return await prettier.format(code, {
           parser: 'html',
-          plugins: [parserHtml],
+          plugins: [await getParser('html')],
           tabWidth: settings.tabWidth,
           useTabs: settings.useTabs,
           printWidth: settings.printWidth,
@@ -54,7 +68,7 @@ export async function formatCode(
       case 'css':
         return await prettier.format(code, {
           parser: 'css',
-          plugins: [parserPostcss],
+          plugins: [await getParser('css')],
           tabWidth: settings.tabWidth,
           useTabs: settings.useTabs,
           printWidth: settings.printWidth,
@@ -71,7 +85,7 @@ export async function formatCode(
       case 'yaml':
         return await prettier.format(code, {
           parser: 'yaml',
-          plugins: [parserYaml],
+          plugins: [await getParser('yaml')],
           tabWidth: settings.tabWidth,
           useTabs: settings.useTabs,
           printWidth: settings.printWidth,
@@ -80,7 +94,7 @@ export async function formatCode(
       case 'markdown':
         return await prettier.format(code, {
           parser: 'markdown',
-          plugins: [parserMarkdown],
+          plugins: [await getParser('markdown')],
           tabWidth: settings.tabWidth,
           useTabs: settings.useTabs,
           printWidth: settings.printWidth,
