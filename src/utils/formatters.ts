@@ -1,6 +1,6 @@
 import * as prettier from 'prettier';
 import { Language, FormatterSettings } from '../types';
-import { js_beautify, html_beautify } from 'js-beautify';
+import { html_beautify } from 'js-beautify';
 
 // Import parsers dynamically to avoid bundling issues
 async function getParser(parserName: string) {
@@ -111,8 +111,6 @@ export async function formatCode(
           indent_char: settings.useTabs ? '\t' : ' ',
           max_preserve_newlines: 2,
           preserve_newlines: true,
-          keep_array_indentation: false,
-          break_chained_methods: false,
           indent_scripts: 'normal',
           brace_style: 'collapse',
           space_before_conditional: true,
