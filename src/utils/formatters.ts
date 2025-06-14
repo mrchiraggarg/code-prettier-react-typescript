@@ -112,11 +112,11 @@ export async function formatCode(
           max_preserve_newlines: 2,
           preserve_newlines: true,
           indent_scripts: 'normal',
-          brace_style: 'collapse',
-          space_before_conditional: true,
-          unescape_strings: false,
-          jslint_happy: false,
-          end_with_newline: false,
+
+
+
+
+
           wrap_line_length: settings.printWidth,
           indent_inner_html: false,
           comma_first: false,
